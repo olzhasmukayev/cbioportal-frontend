@@ -352,6 +352,28 @@ export class StudySummaryTab extends React.Component<
                     ),
                 }),
             }),
+            [ChartTypeEnum.BAR_CATEGORICAL_CHART]: () => ({
+                commonProps: {
+                    onChangeChartType: this.handlers.onChangeChartType,
+                    getData: (dataType?: DataType) =>
+                        this.store.getChartDownloadableData(
+                            chartMeta,
+                            dataType
+                        ),
+                    downloadTypes: ['Summary Data', 'Full Data', 'SVG', 'PDF'],
+                },
+                [ChartMetaDataTypeEnum.CLINICAL]: () => ({
+                    promise: this.store.getClinicalDataCount(chartMeta),
+                    filters: this.store
+                        .getClinicalDataFiltersByUniqueKey(chartMeta.uniqueKey)
+                        .map(
+                            clinicalDataFilterValue =>
+                                clinicalDataFilterValue.value
+                        ),
+                    onValueSelection: this.handlers.onValueSelection,
+                    onResetSelection: this.handlers.onValueSelection,
+                }),
+            }),
             [ChartTypeEnum.TABLE]: () => ({
                 commonProps: {
                     onChangeChartType: this.handlers.onChangeChartType,

@@ -295,6 +295,7 @@ export default class BarChart extends React.Component<IBarChartProps, {}>
     }
 
     public render() {
+        console.log(this.barDataBasedOnNA);
         return (
             <div onMouseMove={this.onMouseMove}>
                 {this.barData.length > 0 && (

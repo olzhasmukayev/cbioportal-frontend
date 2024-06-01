@@ -359,11 +359,15 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                 };
                 break;
             case ChartTypeEnum.PIE_CHART: {
-                controls = { showTableIcon: true };
+                controls = { showChartChangeOptions: true };
                 break;
             }
             case ChartTypeEnum.TABLE: {
-                controls = { showPieIcon: true };
+                controls = { showChartChangeOptions: true };
+                break;
+            }
+            case ChartTypeEnum.BAR_CATEGORICAL_CHART: {
+                controls = { showChartChangeOptions: true };
                 break;
             }
             case ChartTypeEnum.SURVIVAL: {
@@ -414,6 +418,7 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
             switch (this.props.chartType) {
                 case ChartTypeEnum.PIE_CHART:
                 case ChartTypeEnum.TABLE:
+                case ChartTypeEnum.BAR_CATEGORICAL_CHART:
                     this.props.store.openComparisonPage(this.props.chartMeta, {
                         clinicalAttributeValues: this.props.promise
                             .result! as ClinicalDataCountSummary[],
