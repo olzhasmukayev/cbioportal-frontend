@@ -226,6 +226,8 @@ export type DataBin = {
     start: number;
 };
 
+export type CategoryDataBin = Pick<DataBin, 'id' | 'count' | 'specialValue'>;
+
 export type MutationCategorization = 'MUTATED' | 'MUTATION_TYPE';
 
 export const SPECIAL_CHARTS: ChartMetaWithDimensionAndChartType[] = [
@@ -4876,5 +4878,26 @@ export function getVisibleAttributes(
             return acc;
         },
         []
+    );
+}
+
+export function clinicalDataToDataBin(
+    data: ClinicalDataCountSummary[]
+): CategoryDataBin[] {
+    return data.map(item => ({
+        id: item.value,
+        count: item.count,
+        specialValue: `${item.value}`,
+    }));
+}
+
+export function isClinicalDataCountSummary(
+    data: ClinicalDataCountSummary[] | DataBin[]
+) {
+    return (
+        data.length > 0 &&
+        'color' in data[0] &&
+        'percentage' in data[0] &&
+        'freq' in data[0]
     );
 }

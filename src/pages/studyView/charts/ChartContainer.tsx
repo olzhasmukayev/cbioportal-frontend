@@ -31,6 +31,8 @@ import {
     getWidthByDimension,
     MutationCountVsCnaYBinsMin,
     NumericalGroupComparisonType,
+    isClinicalDataCountSummary,
+    clinicalDataToDataBin,
 } from '../StudyViewUtils';
 import { makeSurvivalChartData } from './survival/StudyViewSurvivalUtils';
 import StudyViewDensityScatterPlot from './scatterPlot/StudyViewDensityScatterPlot';
@@ -367,7 +369,11 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                 break;
             }
             case ChartTypeEnum.BAR_CATEGORICAL_CHART: {
-                controls = { showChartChangeOptions: true };
+                controls = {
+                    showChartChangeOptions: true,
+                    showNAToggle: this.props.showNAToggle,
+                    isShowNAChecked: this.props.isShowNAChecked,
+                };
                 break;
             }
             case ChartTypeEnum.SURVIVAL: {
@@ -566,6 +572,32 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                         onUserSelection={this.handlers.onDataBinSelection}
                         filters={this.props.filters}
                         data={this.props.promise.result}
+                        showNAChecked={this.props.store.isShowNAChecked(
+                            this.props.chartMeta.uniqueKey
+                        )}
+                    />
+                );
+            }
+            case ChartTypeEnum.BAR_CATEGORICAL_CHART: {
+                let data = this.props.promise.result;
+                return () => (
+                    <BarChart
+                        width={getWidthByDimension(
+                            this.props.dimension,
+                            this.borderWidth
+                        )}
+                        height={getHeightByDimension(
+                            this.props.dimension,
+                            this.chartHeaderHeight
+                        )}
+                        ref={this.handlers.ref}
+                        onUserSelection={this.handlers.onDataBinSelection}
+                        filters={this.props.filters}
+                        data={
+                            isClinicalDataCountSummary(data)
+                                ? clinicalDataToDataBin(data)
+                                : data
+                        }
                         showNAChecked={this.props.store.isShowNAChecked(
                             this.props.chartMeta.uniqueKey
                         )}

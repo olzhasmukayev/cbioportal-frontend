@@ -23,6 +23,7 @@ export type StudyViewColorTheme = {
 
 export type StudyViewThreshold = {
     pieToTable: number;
+    pieToBar: number;
     piePadding: number;
     barRatio: number;
     rowsInTableForOneGrid: number;
@@ -166,6 +167,7 @@ const studyViewFrontEnd = {
     },
     thresholds: {
         pieToTable: 20,
+        pieToBar: 5,
         piePadding: 20,
         barRatio: 0.8,
         rowsInTableForOneGrid: 4,

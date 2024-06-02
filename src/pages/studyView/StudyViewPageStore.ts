@@ -184,6 +184,7 @@ import {
     MutationCategorization,
     getChartMetaSet,
     getVisibleAttributes,
+    CategoryDataBin,
 } from './StudyViewUtils';
 import { SingleGeneQuery } from 'shared/lib/oql/oql-parser';
 import autobind from 'autobind-decorator';
@@ -592,7 +593,9 @@ export class StudyViewPageStore
         }
     };
 
-    public isShowNAToggleVisible(dataBins: DataBin[]): boolean {
+    public isShowNAToggleVisible(
+        dataBins: DataBin[] | CategoryDataBin[]
+    ): boolean {
         return (
             dataBins.length !== 0 &&
             dataBins.some(dataBin => dataBin.specialValue === 'NA')
@@ -7643,7 +7646,7 @@ export class StudyViewPageStore
                     this.getTableDimensionByNumberOfRecords(data.result!.length)
                 );
             }
-            this.chartsType.set(attr.uniqueKey, ChartTypeEnum.TABLE);
+            this.chartsType.set(attr.uniqueKey, newChartType);
         } else {
             this.chartsDimension.set(
                 attr.uniqueKey,
@@ -9897,6 +9900,17 @@ export class StudyViewPageStore
                 this.chartsDimension.set(
                     uniqueKey,
                     this.getTableDimensionByNumberOfRecords(dataSize)
+                );
+            } else if (dataSize > STUDY_VIEW_CONFIG.thresholds.pieToBar) {
+                this.chartsType.set(
+                    uniqueKey,
+                    ChartTypeEnum.BAR_CATEGORICAL_CHART
+                );
+                this.chartsDimension.set(
+                    uniqueKey,
+                    STUDY_VIEW_CONFIG.layout.dimensions[
+                        ChartTypeEnum.BAR_CATEGORICAL_CHART
+                    ]
                 );
             } else {
                 this.chartsType.set(uniqueKey, ChartTypeEnum.PIE_CHART);

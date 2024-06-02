@@ -42,6 +42,7 @@ import {
     getGenesCNADownloadData,
     getPatientTreatmentDownloadData,
     getSampleTreatmentDownloadData,
+    clinicalDataToDataBin,
 } from '../StudyViewUtils';
 import { DataType } from 'cbioportal-frontend-commons';
 import DelayedRender from 'shared/components/DelayedRender';
@@ -354,24 +355,30 @@ export class StudySummaryTab extends React.Component<
             }),
             [ChartTypeEnum.BAR_CATEGORICAL_CHART]: () => ({
                 commonProps: {
+                    onToggleNAValue: this.handlers.onToggleNAValue,
                     onChangeChartType: this.handlers.onChangeChartType,
                     getData: (dataType?: DataType) =>
                         this.store.getChartDownloadableData(
                             chartMeta,
                             dataType
                         ),
+                    isShowNAChecked: this.store.isShowNAChecked(
+                        chartMeta.uniqueKey
+                    ),
                     downloadTypes: ['Summary Data', 'Full Data', 'SVG', 'PDF'],
                 },
                 [ChartMetaDataTypeEnum.CLINICAL]: () => ({
                     promise: this.store.getClinicalDataCount(chartMeta),
-                    filters: this.store
-                        .getClinicalDataFiltersByUniqueKey(chartMeta.uniqueKey)
-                        .map(
-                            clinicalDataFilterValue =>
-                                clinicalDataFilterValue.value
-                        ),
-                    onValueSelection: this.handlers.onValueSelection,
-                    onResetSelection: this.handlers.onValueSelection,
+                    onDataBinSelection: this.handlers.onDataBinSelection,
+                    filters: this.store.getClinicalDataFiltersByUniqueKey(
+                        chartMeta.uniqueKey
+                    ),
+                    onResetSelection: this.handlers.onDataBinSelection,
+                    showNAToggle: this.store.isShowNAToggleVisible(
+                        clinicalDataToDataBin(
+                            this.store.getClinicalDataCount(chartMeta).result!
+                        )
+                    ),
                 }),
             }),
             [ChartTypeEnum.TABLE]: () => ({

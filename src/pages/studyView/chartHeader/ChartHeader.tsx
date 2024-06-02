@@ -568,7 +568,10 @@ export class ChartHeader extends React.Component<IChartHeaderProps, {}> {
             );
         }
 
-        if (this.props.chartType === ChartTypeEnum.BAR_CHART) {
+        if (
+            this.props.chartType === ChartTypeEnum.BAR_CHART ||
+            this.props.chartType === ChartTypeEnum.BAR_CATEGORICAL_CHART
+        ) {
             items.push(
                 <li>
                     <a
