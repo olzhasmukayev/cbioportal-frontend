@@ -94,7 +94,7 @@ export enum ChartTypeEnum {
 export enum ChartTypeNameEnum {
     PIE_CHART = 'pie chart',
     BAR_CHART = 'bar chart',
-    BAR_CATEGORICAL_CHART = 'bar categorical chart',
+    BAR_CATEGORICAL_CHART = 'bar chart',
     SURVIVAL = 'survival plot',
     TABLE = 'table',
     SCATTER = 'density plot',
@@ -192,11 +192,11 @@ const studyViewFrontEnd = {
             },
             [ChartTypeEnum.BAR_CHART]: {
                 w: 2,
-                h: 1,
+                h: 2,
             },
             [ChartTypeEnum.BAR_CATEGORICAL_CHART]: {
                 w: 2,
-                h: 1,
+                h: 2,
             },
             [ChartTypeEnum.SCATTER]: {
                 w: 2,

@@ -575,6 +575,7 @@ export class StudyViewPageStore
             this._customDataBinFilterSet.set(uniqueKey, newFilter as any);
         } else {
             const filterSet = this.getDataBinFilterSet(uniqueKey);
+            console.log(filterSet);
             const newFilter = _.clone(filterSet.get(uniqueKey)!);
             newFilter.showNA = !this.isShowNAChecked(uniqueKey);
             filterSet.set(uniqueKey, newFilter as any);
