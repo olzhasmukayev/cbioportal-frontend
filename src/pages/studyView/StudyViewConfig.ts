@@ -70,6 +70,7 @@ export enum ChartTypeEnum {
     PIE_CHART = 'PIE_CHART',
     BAR_CHART = 'BAR_CHART',
     BAR_CATEGORICAL_CHART = 'BAR_CATEGORICAL_CHART',
+    BAR_WITH_PREVIEW_CHART = 'BAR_WITH_PREVIEW_CHART',
     SURVIVAL = 'SURVIVAL',
     TABLE = 'TABLE',
     SCATTER = 'SCATTER',
@@ -95,6 +96,7 @@ export enum ChartTypeNameEnum {
     PIE_CHART = 'pie chart',
     BAR_CHART = 'bar chart',
     BAR_CATEGORICAL_CHART = 'bar chart',
+    BAR_WITH_PREVIEW_CHART = 'bar chart with preview',
     SURVIVAL = 'survival plot',
     TABLE = 'table',
     SCATTER = 'density plot',
@@ -192,9 +194,13 @@ const studyViewFrontEnd = {
             },
             [ChartTypeEnum.BAR_CHART]: {
                 w: 2,
-                h: 2,
+                h: 1,
             },
             [ChartTypeEnum.BAR_CATEGORICAL_CHART]: {
+                w: 2,
+                h: 1,
+            },
+            [ChartTypeEnum.BAR_WITH_PREVIEW_CHART]: {
                 w: 2,
                 h: 2,
             },

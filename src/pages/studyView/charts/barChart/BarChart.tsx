@@ -5,8 +5,6 @@ import {
     VictoryBar,
     VictoryChart,
     VictoryLabel,
-    VictorySelectionContainer,
-    VictoryZoomContainer,
     VictoryBrushContainer,
     createContainer,
 } from 'victory';
@@ -43,6 +41,7 @@ export interface IBarChartProps {
     filters: DataFilterValue[];
     onUserSelection: (dataBins: DataBin[]) => void;
     showNAChecked: boolean;
+    showPreviewChecked: boolean;
 }
 
 export type BarDatum = {
@@ -108,6 +107,7 @@ export default class BarChart
         );
         this.props.onUserSelection(dataBins);
     }
+
     public toSVGDOMNode(): Element {
         return this.svgContainer.firstChild;
     }
@@ -296,17 +296,6 @@ export default class BarChart
     }
 
     @computed
-    get visibleMaxY(): number {
-        const visibleBars = this.barDataBasedOnNA.filter(bar =>
-            this.state.zoomDomain
-                ? bar.x >= this.state.zoomDomain.x[0] &&
-                  bar.x <= this.state.zoomDomain.x[1]
-                : true
-        );
-        return Math.max(...visibleBars.map(bar => bar.y), 0);
-    }
-
-    @computed
     get labelShowingNA(): JSX.Element | null {
         if (!this.props.showNAChecked && this.numberOfNA) {
             const labelNA = this.barDataWithNA
@@ -339,20 +328,27 @@ export default class BarChart
                                     containerRef={(ref: any) =>
                                         (this.svgContainer = ref)
                                     }
+                                    allowPan={false}
+                                    allowZoom={false}
                                     zoomDimension="x"
                                     selectionDimension="x"
                                     onSelection={this.onSelection}
                                     zoomDomain={this.state.zoomDomain}
-                                    onZoomDomainChange={this.handleZoom}
                                 />
                             }
                             style={{
                                 parent: {
                                     width: this.props.width,
-                                    height: this.props.height / 2,
+                                    height: this.props.showPreviewChecked
+                                        ? this.props.height / 2
+                                        : this.props.height,
                                 },
                             }}
-                            height={this.props.height / 2}
+                            height={
+                                this.props.showPreviewChecked
+                                    ? this.props.height / 2 - this.bottomPadding
+                                    : this.props.height - this.bottomPadding
+                            }
                             width={this.props.width}
                             padding={{
                                 left: 40,
@@ -402,56 +398,76 @@ export default class BarChart
                             />
                             {this.labelShowingNA}
                         </VictoryChart>
-                        <VictoryChart
-                            style={{
-                                parent: {
-                                    width: this.props.width,
-                                    height: this.props.height / 2,
-                                },
-                            }}
-                            height={this.props.height / 2}
-                            width={this.props.width}
-                            padding={{
-                                left: 40,
-                                right: 20,
-                                top: 10,
-                                bottom: this.bottomPadding,
-                            }}
-                            theme={VICTORY_THEME}
-                            containerComponent={
-                                <VictoryBrushContainer
-                                    brushDimension="x"
-                                    brushDomain={this.state.selectedDomain}
-                                    onBrushDomainChange={this.handleBrush}
-                                />
-                            }
-                        >
-                            <VictoryAxis
-                                tickValues={this.tickValuesBasedOnNA}
-                                tickFormat={(t: number) => ''}
-                                domain={[0, this.maximumX]}
-                            />
-                            <VictoryAxis
-                                dependentAxis={true}
-                                tickFormat={(t: number) => ''}
-                            />
-                            <VictoryBar
-                                barRatio={this.barRatio}
+                        {!!this.props.showPreviewChecked && (
+                            <VictoryChart
+                                height={this.props.height / 2}
+                                width={this.props.width}
+                                theme={VICTORY_THEME}
+                                padding={{
+                                    left: 40,
+                                    right: 20,
+                                    top: 10,
+                                    bottom: this.bottomPadding,
+                                }}
                                 style={{
-                                    data: {
-                                        fill: (d: BarDatum) =>
-                                            isDataBinSelected(
-                                                d.dataBin,
-                                                this.props.filters
-                                            ) || this.props.filters.length === 0
-                                                ? STUDY_VIEW_CONFIG.colors.theme
-                                                      .primary
-                                                : DEFAULT_NA_COLOR,
+                                    parent: {
+                                        width: this.props.width,
+                                        height: this.props.height / 2,
                                     },
                                 }}
-                                data={this.barDataBasedOnNA}
-                            />
-                        </VictoryChart>
+                                containerComponent={
+                                    <VictoryBrushContainer
+                                        handleStyle={{
+                                            stroke: '#A9A9A9',
+                                            fill: '#A9A9A9',
+                                            width: 3,
+                                        }}
+                                        brushDimension="x"
+                                        onBrushDomainChange={this.handleBrush}
+                                        brushDomain={this.state.selectedDomain}
+                                    />
+                                }
+                            >
+                                <VictoryAxis
+                                    tickValues={this.tickValuesBasedOnNA}
+                                    tickFormat={(t: number) =>
+                                        this.tickFormat[t - 1]
+                                    }
+                                    domain={[0, this.maximumX]}
+                                    tickLabelComponent={<BarChartAxisLabel />}
+                                    style={{
+                                        tickLabels: {
+                                            angle: TILT_ANGLE,
+                                            verticalAnchor: 'start',
+                                            textAnchor: 'start',
+                                        },
+                                    }}
+                                />
+                                <VictoryAxis
+                                    dependentAxis
+                                    tickFormat={(t: number) =>
+                                        Number.isInteger(t) ? t.toFixed(0) : ''
+                                    }
+                                />
+                                <VictoryBar
+                                    barRatio={this.barRatio}
+                                    style={{
+                                        data: {
+                                            fill: (d: BarDatum) =>
+                                                isDataBinSelected(
+                                                    d.dataBin,
+                                                    this.props.filters
+                                                ) ||
+                                                this.props.filters.length === 0
+                                                    ? STUDY_VIEW_CONFIG.colors
+                                                          .theme.primary
+                                                    : DEFAULT_NA_COLOR,
+                                        },
+                                    }}
+                                    data={this.barDataBasedOnNA}
+                                />
+                            </VictoryChart>
+                        )}
                     </div>
                 )}
 

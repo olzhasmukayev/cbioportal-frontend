@@ -147,6 +147,7 @@ export interface IChartContainerProps {
     onToggleViolinPlot?: (chartMeta: ChartMeta) => void;
     onToggleBoxPlot?: (chartMeta: ChartMeta) => void;
     onToggleNAValue?: (chartMeta: ChartMeta) => void;
+    onTogglePreview?: (chartMeta: ChartMeta) => void;
     onSwapAxes?: (chartMeta: ChartMeta) => void;
     logScaleChecked?: boolean;
     showLogScaleToggle?: boolean;
@@ -159,6 +160,8 @@ export interface IChartContainerProps {
     showViolinPlotToggle?: boolean;
     violinPlotChecked?: boolean;
     isShowNAChecked?: boolean;
+    isShowPreviewChecked?: boolean;
+    isPreviewShown?: boolean;
     showNAToggle?: boolean;
     selectedCategories?: string[];
     selectedGenes?: any;
@@ -266,6 +269,9 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
             onToggleNAValue: action(() => {
                 this.props.onToggleNAValue?.(this.props.chartMeta);
             }),
+            onTogglePreview: action(() => {
+                this.props.onTogglePreview?.(this.props.chartMeta);
+            }),
             onToggleSurvivalPlotLeftTruncation: action(() => {
                 this.props.onToggleSurvivalPlotLeftTruncation?.(
                     this.props.chartMeta
@@ -336,7 +342,9 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                     showLogScaleToggle: this.props.showLogScaleToggle,
                     logScaleChecked: this.props.logScaleChecked,
                     isShowNAChecked: this.props.isShowNAChecked,
+                    isShowPreviewChecked: this.props.isShowPreviewChecked,
                     showNAToggle: this.props.showNAToggle,
+                    showPreview: this.props.isPreviewShown,
                 };
                 break;
             }
@@ -373,6 +381,7 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                     showChartChangeOptions: true,
                     showNAToggle: this.props.showNAToggle,
                     isShowNAChecked: this.props.isShowNAChecked,
+                    showPreview: this.props.isPreviewShown,
                 };
                 break;
             }
@@ -575,6 +584,9 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                         showNAChecked={this.props.store.isShowNAChecked(
                             this.props.chartMeta.uniqueKey
                         )}
+                        showPreviewChecked={this.props.store.isPreviewShown(
+                            this.props.chartMeta.uniqueKey
+                        )}
                     />
                 );
             }
@@ -599,6 +611,9 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                                 : data
                         }
                         showNAChecked={this.props.store.isShowNAChecked(
+                            this.props.chartMeta.uniqueKey
+                        )}
+                        showPreviewChecked={this.props.store.isPreviewShown(
                             this.props.chartMeta.uniqueKey
                         )}
                     />
@@ -1542,6 +1557,7 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                         }
                         swapAxes={this.handlers.onSwapAxes}
                         toggleNAValue={this.handlers.onToggleNAValue}
+                        togglePreview={this.handlers.onTogglePreview}
                         chartControls={this.chartControls}
                         changeChartType={this.changeChartType}
                         getSVG={() => Promise.resolve(this.toSVGDOMNode())}
