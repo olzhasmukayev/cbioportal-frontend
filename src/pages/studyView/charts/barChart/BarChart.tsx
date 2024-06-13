@@ -97,7 +97,22 @@ export default class BarChart
     }
 
     private handleBrush(domain: any) {
-        this.setState({ zoomDomain: domain });
+        if (!domain || !domain.x) {
+            console.error('Brush domain is not defined.');
+            return;
+        }
+
+        const filteredData = this.barDataBasedOnNA.filter(
+            d => d.x >= domain.x[0] && d.x <= domain.x[1]
+        );
+        const maxY = Math.max(...filteredData.map(d => d.y), 0); // Ensure at least 0 or greater is returned.
+
+        this.setState({
+            zoomDomain: {
+                x: domain.x,
+                y: [0, maxY], // Updating y domain from 0 to maximum y found in the selected range.
+            },
+        });
     }
 
     @autobind
