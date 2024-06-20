@@ -341,17 +341,14 @@ export const chartChangeOptionsMap: ChangeChartOptionsMap = {
     [ChartTypeEnum.PIE_CHART]: [
         ChartTypeEnum.BAR_CATEGORICAL_CHART,
         ChartTypeEnum.TABLE,
-        ChartTypeEnum.LINE_CHART,
     ],
     [ChartTypeEnum.TABLE]: [
         ChartTypeEnum.PIE_CHART,
         ChartTypeEnum.BAR_CATEGORICAL_CHART,
-        ChartTypeEnum.LINE_CHART,
     ],
     [ChartTypeEnum.BAR_CATEGORICAL_CHART]: [
         ChartTypeEnum.PIE_CHART,
         ChartTypeEnum.TABLE,
-        ChartTypeEnum.LINE_CHART,
     ],
     [ChartTypeEnum.LINE_CHART]: [ChartTypeEnum.BAR_CHART],
     [ChartTypeEnum.BAR_CHART]: [ChartTypeEnum.LINE_CHART],

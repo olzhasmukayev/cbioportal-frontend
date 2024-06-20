@@ -640,6 +640,7 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                         )}
                         ref={this.handlers.ref}
                         data={this.props.promise.result}
+                        onUserSelection={this.handlers.onDataBinSelection}
                     />
                 );
             }

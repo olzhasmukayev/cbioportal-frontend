@@ -226,7 +226,7 @@ export default class BarChart
             VICTORY_THEME.axis.style.tickLabels.fontSize,
             this.tickFormat,
             TILT_ANGLE,
-            40,
+            30,
             10
         );
     }
@@ -368,7 +368,7 @@ export default class BarChart
                             padding={{
                                 left: 40,
                                 right: 20,
-                                top: 10,
+                                top: 5,
                                 bottom: this.bottomPadding,
                             }}
                             theme={VICTORY_THEME}
@@ -376,7 +376,7 @@ export default class BarChart
                             <VictoryAxis
                                 tickValues={this.tickValuesBasedOnNA}
                                 tickFormat={(t: number) =>
-                                    this.tickFormat[t - 1]
+                                    this.tickFormat[t - 1].slice(0, 5)
                                 }
                                 domain={[0, this.maximumX]}
                                 tickLabelComponent={<BarChartAxisLabel />}
@@ -391,7 +391,7 @@ export default class BarChart
                             <VictoryAxis
                                 dependentAxis
                                 tickFormat={(t: number) =>
-                                    Number.isInteger(t) ? t.toFixed(0) : ''
+                                    Number.isInteger(t) ? t.toFixed(2) : ''
                                 }
                             />
                             <VictoryBar

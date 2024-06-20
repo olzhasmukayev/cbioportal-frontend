@@ -5,11 +5,11 @@ import {
     VictoryChart,
     VictoryAxis,
     VictoryTheme,
-    VictoryVoronoiContainer,
     VictoryTooltip,
     VictoryScatter,
+    VictorySelectionContainer,
 } from 'victory';
-import { makeObservable, computed } from 'mobx';
+import { makeObservable, observable, computed } from 'mobx';
 
 interface IDataBin {
     id: string;
@@ -23,6 +23,7 @@ interface ILineChartProps {
     data: IDataBin[];
     width?: number;
     height?: number;
+    onUserSelection: (selectedData: IDataBin[]) => void;
 }
 
 @observer
@@ -34,7 +35,7 @@ class LineChart extends React.Component<ILineChartProps> {
 
     @computed
     get processedData(): { x: number; y: number; label?: string }[] {
-        return this.props.data.slice(0, -2).map(item => ({
+        return this.props?.data.slice(0, -2).map(item => ({
             x: item.end ?? item.start ?? 0,
             y: item.count,
         }));
@@ -42,20 +43,29 @@ class LineChart extends React.Component<ILineChartProps> {
 
     @computed
     get processedLabelData(): { x: number; y: number; label?: string }[] {
-        return this.props.data.slice(0, -2).map(item => ({
+        return this.props?.data.slice(0, -2).map(item => ({
             x: item.end ?? item.start ?? 0,
             y: item.count,
-            label:
-                'x:' +
-                String(item.end ?? item.start ?? 0) +
-                ' y: ' +
-                String(item.count),
+            label: `x:${item.end ?? item.start ?? 0} y:${item.count}`,
         }));
     }
 
+    handleSelection = (points: any, bounds: any) => {
+        if (bounds && bounds.x) {
+            const selectedData = this.props.data
+                .slice(0, -2)
+                .filter(
+                    item =>
+                        (item.end ?? item.start ?? 0) >= bounds.x[0] &&
+                        (item.end ?? item.start ?? 0) <= bounds.x[1]
+                );
+            this.props.onUserSelection(selectedData);
+        }
+    };
+
     render() {
         const { width = 400, height = 300 } = this.props;
-        console.log(this.props.data);
+
         return (
             <div>
                 <VictoryChart
@@ -63,7 +73,12 @@ class LineChart extends React.Component<ILineChartProps> {
                     theme={VictoryTheme.material}
                     width={width}
                     height={height}
-                    containerComponent={<VictoryVoronoiContainer />}
+                    containerComponent={
+                        <VictorySelectionContainer
+                            onSelection={this.handleSelection}
+                            selectionDimension="x"
+                        />
+                    }
                 >
                     <VictoryAxis
                         tickFormat={(t: number) => `${t.toFixed(0)}`}
@@ -82,7 +97,7 @@ class LineChart extends React.Component<ILineChartProps> {
                     />
                     <VictoryScatter
                         data={this.processedLabelData}
-                        size={3}
+                        size={4}
                         style={{ data: { fill: '#c43a31' } }}
                         labels={({ datum }: { datum: any }) => datum.label}
                         labelComponent={
