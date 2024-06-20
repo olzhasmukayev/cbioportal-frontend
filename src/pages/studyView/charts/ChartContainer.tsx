@@ -85,6 +85,7 @@ import {
 } from 'pages/studyView/table/StructuralVariantMultiSelectionTable';
 import { StructVarGenePair } from 'pages/studyView/StructVarUtils';
 import { Modal } from 'react-bootstrap';
+import LineChart from './lineChart/LineChart';
 
 export interface AbstractChart {
     toSVGDOMNode: () => Element;
@@ -345,6 +346,7 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                     isShowPreviewChecked: this.props.isShowPreviewChecked,
                     showNAToggle: this.props.showNAToggle,
                     showPreview: this.props.isPreviewShown,
+                    showChartChangeOptions: true,
                 };
                 break;
             }
@@ -382,6 +384,12 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                     showNAToggle: this.props.showNAToggle,
                     isShowNAChecked: this.props.isShowNAChecked,
                     showPreview: this.props.isPreviewShown,
+                };
+                break;
+            }
+            case ChartTypeEnum.LINE_CHART: {
+                controls = {
+                    showChartChangeOptions: true,
                 };
                 break;
             }
@@ -616,6 +624,22 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                         showPreviewChecked={this.props.store.isPreviewShown(
                             this.props.chartMeta.uniqueKey
                         )}
+                    />
+                );
+            }
+            case ChartTypeEnum.LINE_CHART: {
+                return () => (
+                    <LineChart
+                        width={getWidthByDimension(
+                            this.props.dimension,
+                            this.borderWidth
+                        )}
+                        height={getHeightByDimension(
+                            this.props.dimension,
+                            this.chartHeaderHeight
+                        )}
+                        ref={this.handlers.ref}
+                        data={this.props.promise.result}
                     />
                 );
             }

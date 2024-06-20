@@ -69,6 +69,7 @@ export type ChangeChartOptionsMap = {
 export enum ChartTypeEnum {
     PIE_CHART = 'PIE_CHART',
     BAR_CHART = 'BAR_CHART',
+    LINE_CHART = 'LINE_CHART',
     BAR_CATEGORICAL_CHART = 'BAR_CATEGORICAL_CHART',
     BAR_WITH_PREVIEW_CHART = 'BAR_WITH_PREVIEW_CHART',
     SURVIVAL = 'SURVIVAL',
@@ -95,6 +96,7 @@ export enum ChartTypeEnum {
 export enum ChartTypeNameEnum {
     PIE_CHART = 'pie chart',
     BAR_CHART = 'bar chart',
+    LINE_CHART = 'line chart',
     BAR_CATEGORICAL_CHART = 'bar chart',
     BAR_WITH_PREVIEW_CHART = 'bar chart with preview',
     SURVIVAL = 'survival plot',
@@ -191,6 +193,10 @@ const studyViewFrontEnd = {
             [ChartTypeEnum.PIE_CHART]: {
                 w: 1,
                 h: 1,
+            },
+            [ChartTypeEnum.LINE_CHART]: {
+                w: 2,
+                h: 2,
             },
             [ChartTypeEnum.BAR_CHART]: {
                 w: 2,
@@ -335,13 +341,18 @@ export const chartChangeOptionsMap: ChangeChartOptionsMap = {
     [ChartTypeEnum.PIE_CHART]: [
         ChartTypeEnum.BAR_CATEGORICAL_CHART,
         ChartTypeEnum.TABLE,
+        ChartTypeEnum.LINE_CHART,
     ],
     [ChartTypeEnum.TABLE]: [
         ChartTypeEnum.PIE_CHART,
         ChartTypeEnum.BAR_CATEGORICAL_CHART,
+        ChartTypeEnum.LINE_CHART,
     ],
     [ChartTypeEnum.BAR_CATEGORICAL_CHART]: [
         ChartTypeEnum.PIE_CHART,
         ChartTypeEnum.TABLE,
+        ChartTypeEnum.LINE_CHART,
     ],
+    [ChartTypeEnum.LINE_CHART]: [ChartTypeEnum.BAR_CHART],
+    [ChartTypeEnum.BAR_CHART]: [ChartTypeEnum.LINE_CHART],
 };
