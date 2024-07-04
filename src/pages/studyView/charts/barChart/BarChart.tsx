@@ -366,7 +366,7 @@ export default class BarChart
                             }
                             width={this.props.width}
                             padding={{
-                                left: 40,
+                                left: 50,
                                 right: 20,
                                 top: 5,
                                 bottom: this.bottomPadding,
@@ -376,7 +376,7 @@ export default class BarChart
                             <VictoryAxis
                                 tickValues={this.tickValuesBasedOnNA}
                                 tickFormat={(t: number) =>
-                                    this.tickFormat[t - 1].slice(0, 5)
+                                    this.tickFormat[t - 1]
                                 }
                                 domain={[0, this.maximumX]}
                                 tickLabelComponent={<BarChartAxisLabel />}
@@ -419,10 +419,10 @@ export default class BarChart
                                 width={this.props.width}
                                 theme={VICTORY_THEME}
                                 padding={{
-                                    left: 40,
-                                    right: 20,
                                     top: 10,
-                                    bottom: this.bottomPadding,
+                                    left: 50,
+                                    right: 20,
+                                    bottom: this.bottomPadding + 15,
                                 }}
                                 style={{
                                     parent: {
@@ -461,7 +461,7 @@ export default class BarChart
                                 <VictoryAxis
                                     dependentAxis
                                     tickFormat={(t: number) =>
-                                        Number.isInteger(t) ? t.toFixed(0) : ''
+                                        Number.isInteger(t) ? t.toFixed(2) : ''
                                     }
                                 />
                                 <VictoryBar

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { VictoryLabel, Helpers } from 'victory';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 export class BarChartAxisLabel extends VictoryLabel {
     // Contents mostly copied from https://github.com/FormidableLabs/victory-core/blob/master/src/victory-label/victory-label.js
@@ -28,24 +29,33 @@ export class BarChartAxisLabel extends VictoryLabel {
             key: style[0].textAnchor || textAnchor,
         };
 
-        let tspan = [];
+        let tspan: any = [];
 
-        // add the second string as a superscript
-        // we are not using baselineShift property due to compatibility issues, instead adjusting dy
-        // for more details see https://stackoverflow.com/questions/12332448/subscripts-and-superscripts-in-svg
-        if (content.length > 1) {
-            tspan.push(<tspan {...tspanProps}>{content[0]}</tspan>);
+        const tooltip = (
+            <Tooltip id={`tooltip-${datum}`} style={{ marginLeft: '-10px' }}>
+                {`${content.join(' ')}`}
+            </Tooltip>
+        );
+
+        content.forEach((line, index) => {
+            const isSuperscript = index > 0;
+            const superscriptStyle = isSuperscript
+                ? {
+                      dy: -style[0].fontSize / 2,
+                      style: { ...style[0], fontSize: style[0].fontSize * 0.7 },
+                  }
+                : {};
+
             tspan.push(
-                <tspan
-                    dy={-style[0].fontSize / 2}
-                    style={{ ...style[0], fontSize: style[0].fontSize * 0.7 }}
-                >
-                    {content[1]}
-                </tspan>
+                <OverlayTrigger placement="top" overlay={tooltip}>
+                    <tspan {...tspanProps} {...superscriptStyle}>
+                        {line.length > 4
+                            ? line.slice(0, 4).trim() + '...'
+                            : line}
+                    </tspan>
+                </OverlayTrigger>
             );
-        } else {
-            tspan.push(<tspan {...tspanProps}>{content[0]}</tspan>);
-        }
+        });
 
         return React.cloneElement(
             props.textComponent,

@@ -653,7 +653,7 @@ export class ChartHeader extends React.Component<IChartHeaderProps, {}> {
                                 }
                                 label={
                                     <span style={{ marginTop: -3 }}>
-                                        Show Preview
+                                        Show Zoom Preview
                                     </span>
                                 }
                                 style={{ marginTop: 1, marginBottom: -3 }}

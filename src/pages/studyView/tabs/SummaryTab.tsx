@@ -1009,6 +1009,8 @@ export class StudySummaryTab extends React.Component<
             props = { ...props, ...subTypeProps };
         }
 
+        // modal render
+
         // Using custom component inside of the GridLayout creates too many chaos as mentioned here
         // https://github.com/STRML/react-grid-layout/issues/299
         // Option 1:    Always create div wrapper out of your custom component, but this solves all the issues.
@@ -1046,7 +1048,6 @@ export class StudySummaryTab extends React.Component<
                 const toUpdate = this.store.chartsDimension.get(
                     key
                 ) as ChartDimension;
-
                 toUpdate.h = l.h;
                 toUpdate.w = l.w;
                 this.store.chartsDimension.set(key, toUpdate);
