@@ -555,6 +555,7 @@ export class StudyViewPageStore
     @observable userGroupColors: { [groupId: string]: string } = {};
     @observable typeIdsMode: string = CustomDataTypeEnum.CATEGORICAL;
     @observable chartsBinMethod: { [chartKey: string]: BinMethodOption } = {};
+    @observable largeChartModal = '';
     chartsBinsGeneratorConfigs = observable.map<string, BinsGeneratorConfig>();
 
     private getDataBinFilterSet(uniqueKey: string) {
@@ -644,6 +645,12 @@ export class StudyViewPageStore
             dataBins.some(dataBin => dataBin.specialValue === 'NA')
         );
     }
+
+    @action
+    public toggleLargeChartModal = (uniqueKey: string): void => {
+        this.largeChartModal =
+            this.largeChartModal === uniqueKey ? '' : uniqueKey;
+    };
 
     constructor(
         public appStore: AppStore,

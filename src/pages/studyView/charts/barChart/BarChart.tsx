@@ -391,7 +391,7 @@ export default class BarChart
                             <VictoryAxis
                                 dependentAxis
                                 tickFormat={(t: number) =>
-                                    Number.isInteger(t) ? t.toFixed(2) : ''
+                                    Number.isInteger(t) ? t : ''
                                 }
                             />
                             <VictoryBar
@@ -461,7 +461,7 @@ export default class BarChart
                                 <VictoryAxis
                                     dependentAxis
                                     tickFormat={(t: number) =>
-                                        Number.isInteger(t) ? t.toFixed(2) : ''
+                                        Number.isInteger(t) ? t : ''
                                     }
                                 />
                                 <VictoryBar

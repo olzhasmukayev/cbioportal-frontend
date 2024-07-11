@@ -889,6 +889,33 @@ export class ChartHeader extends React.Component<IChartHeaderProps, {}> {
                                     ></i>
                                 </button>
                             </DefaultTooltip>
+                            <DefaultTooltip
+                                placement={this.tooltipPosition}
+                                align={this.tooltipAlign}
+                                overlay={<span>Enlage chart</span>}
+                            >
+                                <button
+                                    className={classnames(
+                                        'btn btn-xs btn-default',
+                                        styles.item
+                                    )}
+                                    data-test={'lageChartModal'}
+                                    onClick={() =>
+                                        this.props.store.toggleLargeChartModal(
+                                            this.props.chartMeta.uniqueKey
+                                        )
+                                    }
+                                >
+                                    <i
+                                        className={classnames(
+                                            'fa fa-xs fa-fw fa-expand',
+                                            'fa-times',
+                                            styles.clickable
+                                        )}
+                                        aria-hidden="true"
+                                    ></i>
+                                </button>
+                            </DefaultTooltip>
                             {this.menuItems.length > 0 && (
                                 <div
                                     onMouseEnter={this.openMenu}

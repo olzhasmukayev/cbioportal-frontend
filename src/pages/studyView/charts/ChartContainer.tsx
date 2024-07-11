@@ -309,9 +309,14 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
             },
             onChangeChartType: (newChartType: ChartType) => {
                 this.mouseInChart = false;
+                this.newlyAdded = true;
                 this.props.onChangeChartType(
                     this.props.chartMeta,
                     newChartType
+                );
+                setTimeout(
+                    () => (this.newlyAdded = false),
+                    STUDY_VIEW_CONFIG.thresholds.chartHighlight
                 );
             },
             onDeleteChart: () => {

@@ -5,6 +5,7 @@ import {
     ChartContainer,
     IChartContainerProps,
 } from 'pages/studyView/charts/ChartContainer';
+import { Modal } from 'react-bootstrap';
 import { observable, toJS, makeObservable } from 'mobx';
 import { StudyViewPageStore } from 'pages/studyView/StudyViewPageStore';
 import {
@@ -1024,6 +1025,23 @@ export class StudySummaryTab extends React.Component<
         //      issue will be solved.
         return (
             <div key={chartMeta.uniqueKey} data-tour={props.id}>
+                <Modal
+                    bsSize="large"
+                    show={chartMeta.uniqueKey == this.store.largeChartModal}
+                    onHide={() => this.store.toggleLargeChartModal('')}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Large Chart View</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <DelayedRender>
+                            <ChartContainer
+                                key={chartMeta.uniqueKey}
+                                {...(props as any)}
+                            />
+                        </DelayedRender>
+                    </Modal.Body>
+                </Modal>
                 <DelayedRender>
                     {/* Delay the render after a setTimeout, because synchronous rendering would jam UI updates
                     and make things laggy */}

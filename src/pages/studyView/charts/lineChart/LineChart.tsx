@@ -10,6 +10,11 @@ import {
     VictorySelectionContainer,
 } from 'victory';
 import { makeObservable, observable, computed } from 'mobx';
+import autobind from 'autobind-decorator';
+import BarChartToolTip from '../barChart/BarChartToolTip';
+import { ToolTipModel } from '../barChart/BarChartToolTip';
+import WindowStore from 'shared/components/window/WindowStore';
+import ReactDOM from 'react-dom';
 
 interface IDataBin {
     id: string;
@@ -28,6 +33,15 @@ interface ILineChartProps {
 
 @observer
 class LineChart extends React.Component<ILineChartProps> {
+    @observable.ref
+    private mousePosition = { x: 0, y: 0 };
+
+    @observable
+    private currentPointIndex = -1;
+
+    @observable
+    private toolTipModel: ToolTipModel | null = null;
+
     constructor(props: ILineChartProps) {
         super(props);
         makeObservable(this);
@@ -63,11 +77,63 @@ class LineChart extends React.Component<ILineChartProps> {
         }
     };
 
+    @autobind
+    private onMouseMove(event: React.MouseEvent<any>): void {
+        this.mousePosition = { x: event.pageX, y: event.pageY };
+    }
+
+    private get scatterEvents() {
+        const self = this;
+        return [
+            {
+                target: 'data',
+                eventHandlers: {
+                    onMouseEnter: () => {
+                        return [
+                            {
+                                target: 'data',
+                                mutation: (event: any) => {
+                                    self.currentPointIndex =
+                                        event.datum.eventKey;
+                                    self.toolTipModel = {
+                                        start:
+                                            self.props.data[
+                                                self.currentPointIndex
+                                            ].start,
+                                        end:
+                                            self.props.data[
+                                                self.currentPointIndex
+                                            ].end,
+                                        special:
+                                            self.props.data[
+                                                self.currentPointIndex
+                                            ].specialValue,
+                                        sampleCount: event.datum.y,
+                                    };
+                                },
+                            },
+                        ];
+                    },
+                    onMouseLeave: () => {
+                        return [
+                            {
+                                target: 'data',
+                                mutation: () => {
+                                    self.toolTipModel = null;
+                                },
+                            },
+                        ];
+                    },
+                },
+            },
+        ];
+    }
+
     render() {
         const { width = 400, height = 300 } = this.props;
 
         return (
-            <div>
+            <div onMouseMove={this.onMouseMove} style={{ overflow: 'hidden' }}>
                 <VictoryChart
                     domainPadding={10}
                     theme={VictoryTheme.material}
@@ -100,18 +166,20 @@ class LineChart extends React.Component<ILineChartProps> {
                         size={4}
                         style={{ data: { fill: '#c43a31' } }}
                         labels={({ datum }: { datum: any }) => datum.label}
-                        labelComponent={
-                            <VictoryTooltip
-                                style={{ fontSize: 14 }}
-                                flyoutStyle={{
-                                    stroke: '#5271FF',
-                                    strokeWidth: 1,
-                                    fill: 'white',
-                                }}
-                            />
-                        }
+                        labelComponent={<></>}
+                        events={this.scatterEvents}
                     />
                 </VictoryChart>
+                {ReactDOM.createPortal(
+                    <BarChartToolTip
+                        mousePosition={this.mousePosition}
+                        windowWidth={WindowStore.size.width}
+                        model={this.toolTipModel}
+                        totalBars={this.props.data.length}
+                        currentBarIndex={this.currentPointIndex}
+                    />,
+                    document.body
+                )}
             </div>
         );
     }
