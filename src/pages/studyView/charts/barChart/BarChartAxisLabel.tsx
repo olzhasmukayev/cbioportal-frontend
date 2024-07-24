@@ -46,15 +46,23 @@ export class BarChartAxisLabel extends VictoryLabel {
                   }
                 : {};
 
-            tspan.push(
-                <OverlayTrigger placement="top" overlay={tooltip}>
+            if (props.isTooltip) {
+                tspan.push(
+                    <OverlayTrigger placement="top" overlay={tooltip}>
+                        <tspan {...tspanProps} {...superscriptStyle}>
+                            {line.length > 4
+                                ? line.slice(0, 4).trim() + '...'
+                                : line}
+                        </tspan>
+                    </OverlayTrigger>
+                );
+            } else {
+                tspan.push(
                     <tspan {...tspanProps} {...superscriptStyle}>
-                        {line.length > 4
-                            ? line.slice(0, 4).trim() + '...'
-                            : line}
+                        {line}
                     </tspan>
-                </OverlayTrigger>
-            );
+                );
+            }
         });
 
         return React.cloneElement(

@@ -23,8 +23,9 @@ import {
     needAdditionShiftForLogScaleBarChart,
     DataBin,
     isDataBinSelected,
+    ChartType,
 } from '../../StudyViewUtils';
-import { STUDY_VIEW_CONFIG } from '../../StudyViewConfig';
+import { ChartTypeEnum, STUDY_VIEW_CONFIG } from '../../StudyViewConfig';
 import { DEFAULT_NA_COLOR } from 'shared/lib/Colors';
 import BarChartToolTip, { ToolTipModel } from './BarChartToolTip';
 import WindowStore from 'shared/components/window/WindowStore';
@@ -42,6 +43,7 @@ export interface IBarChartProps {
     onUserSelection: (dataBins: DataBin[]) => void;
     showNAChecked: boolean;
     showPreviewChecked: boolean;
+    chartType: ChartType;
 }
 
 export type BarDatum = {
@@ -379,7 +381,14 @@ export default class BarChart
                                     this.tickFormat[t - 1]
                                 }
                                 domain={[0, this.maximumX]}
-                                tickLabelComponent={<BarChartAxisLabel />}
+                                tickLabelComponent={
+                                    <BarChartAxisLabel
+                                        isTooltip={
+                                            this.props.chartType ===
+                                            ChartTypeEnum.BAR_CATEGORICAL_CHART
+                                        }
+                                    />
+                                }
                                 style={{
                                     tickLabels: {
                                         angle: TILT_ANGLE,
@@ -449,7 +458,14 @@ export default class BarChart
                                         this.tickFormat[t - 1]
                                     }
                                     domain={[0, this.maximumX]}
-                                    tickLabelComponent={<BarChartAxisLabel />}
+                                    tickLabelComponent={
+                                        <BarChartAxisLabel
+                                            isTooltip={
+                                                this.props.chartType ===
+                                                ChartTypeEnum.BAR_CATEGORICAL_CHART
+                                            }
+                                        />
+                                    }
                                     style={{
                                         tickLabels: {
                                             angle: TILT_ANGLE,

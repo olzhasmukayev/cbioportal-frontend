@@ -86,6 +86,7 @@ import {
 import { StructVarGenePair } from 'pages/studyView/StructVarUtils';
 import { Modal } from 'react-bootstrap';
 import LineChart from './lineChart/LineChart';
+import AreaChart from './areaChart/AreaChart';
 
 export interface AbstractChart {
     toSVGDOMNode: () => Element;
@@ -398,6 +399,12 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                 };
                 break;
             }
+            case ChartTypeEnum.AREA_CHART: {
+                controls = {
+                    showChartChangeOptions: true,
+                };
+                break;
+            }
             case ChartTypeEnum.SURVIVAL: {
                 controls = {
                     showSurvivalPlotLeftTruncationToggle: this.props
@@ -600,6 +607,7 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                         showPreviewChecked={this.props.store.isPreviewShown(
                             this.props.chartMeta.uniqueKey
                         )}
+                        chartType={this.chartType}
                     />
                 );
             }
@@ -629,12 +637,30 @@ export class ChartContainer extends React.Component<IChartContainerProps, {}> {
                         showPreviewChecked={this.props.store.isPreviewShown(
                             this.props.chartMeta.uniqueKey
                         )}
+                        chartType={this.chartType}
                     />
                 );
             }
             case ChartTypeEnum.LINE_CHART: {
                 return () => (
                     <LineChart
+                        width={getWidthByDimension(
+                            this.props.dimension,
+                            this.borderWidth
+                        )}
+                        height={getHeightByDimension(
+                            this.props.dimension,
+                            this.chartHeaderHeight
+                        )}
+                        ref={this.handlers.ref}
+                        data={this.props.promise.result}
+                        onUserSelection={this.handlers.onDataBinSelection}
+                    />
+                );
+            }
+            case ChartTypeEnum.AREA_CHART: {
+                return () => (
+                    <AreaChart
                         width={getWidthByDimension(
                             this.props.dimension,
                             this.borderWidth
